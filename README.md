@@ -8,4 +8,4 @@ A lightweight program to transform images to Base64 codes. For blogging use.
 
 - `_img.sh`: `_img.sh [path]` searches all image files under `[path]` non-recursively and pass to `img2b64`.
 
-- `ln.sh`: Run `ln.sh` to create symlink under `/home/username/bin` as `_img`.
+- `ln.sh`: Run `ln.sh [username]` to create symlink under `/home/[username]/bin` as `_img`.

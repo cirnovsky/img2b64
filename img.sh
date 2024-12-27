@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENCODING_PROGRAM="./img2b64"
+ENCODING_PROGRAM="./_img2b64"
 
 IMAGE_EXTENSIONS="jpg|jpeg|png|gif|bmp|tiff|webp"
 

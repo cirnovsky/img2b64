@@ -90,7 +90,7 @@ int main(int argc, const char *argv[]) {
 		/* Allocate memory */
 		buf = (unsigned char *) malloc(size);
 		if (buf == NULL)
-			return error(file, "Failed allocating memory.");
+			return error(file, "Failed at allocating memory.");
 
 
 		/* Read binary data into @buf */
