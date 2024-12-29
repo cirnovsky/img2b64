@@ -33,8 +33,17 @@ const char *detect(const unsigned char *buf, size_t length) {
 		return NULL;
 }
 
-/* Transform image data to base64 code */
-int encode(const unsigned char *in, size_t length_in) {
+/* Extract the filename from a full pathname */
+const char *fn(const char *path) {
+	const char *result = strrchr(path, '/');
+
+	if (result != NULL)
+		return result + 1;
+	return path;
+}
+
+/* Transform image data to Base64 code */
+int encode(const unsigned char *in, const char *fp, size_t length_in) {
 	/**
 	 * ====== Base64 Encoding Algorithm =====
 	 * 	1. @in Each element contains 1 bytes;
@@ -66,18 +75,31 @@ int encode(const unsigned char *in, size_t length_in) {
 		out[j++] = (i > length_in) ? '=' : table[str & 0x3F];
 	}
 	out[length_out] = '\0';
-	printf("![](data:image/%s;base64,%s)\n", detect(in, length_in), out);
+	printf("![%s](data:image/%s;base64,%s)\n", fn(fp), detect(in, length_in), out);
+	fflush(stdout);
+	free(out);
 	return 0;
 }
 
 int main(int argc, const char *argv[]) {
 	freopen("output.md", "w", stdout);
-	int f;
+	int h, i, tmp;
+	int *ii = (int *) malloc((argc - 1) * sizeof(int));
 
 	if (argc < 2)
 		return error(NULL, "Drag image files to start.");
-	for (f = 1; f < argc; ++f) {
-		const char *fp = argv[f];
+
+	/* Sort files according to their names. */
+	for (i = 1; i < argc; ++i)
+		ii[i] = i;
+	for (i = 1; i < argc; ++i)
+		for (h = i + 1; h < argc; ++h)
+			if (strcmp(argv[ii[i]], argv[ii[h]]) > 0)
+				tmp = ii[i], ii[i] = ii[h], ii[h] = tmp;
+
+	for (h = 1; h < argc; ++h) {
+		i = ii[h];
+		const char *fp = argv[i];
 		FILE *file = fopen(fp, "rb");
 		size_t result, size;
 		static unsigned char *buf;
@@ -98,10 +120,11 @@ int main(int argc, const char *argv[]) {
 		if (result != size)
 			return error(file, "Error reading file.");
 
-		encode(buf, size);
+		encode(buf, argv[i], size);
 		free(buf);
 		fclose(file);
 	}
+	puts("EOF!");
 	system("code output.md");
 	getchar();
 	system("rm output.md");

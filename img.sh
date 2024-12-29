@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ENCODING_PROGRAM="./_img2b64"
+ENCODING_PROGRAM=$(dirname "$0")/_img2b64
 
-IMAGE_EXTENSIONS="jpg|jpeg|png|gif|bmp|tiff|webp"
+IMAGE_EXTENSIONS="jpg|jpeg|png|gif|bmp|webp"
 
 if [ -z "$1" ]; then
     SEARCH_PATH="."
